@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hospital Reception Admin Page</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .navbar {
+                background-color: black;
+            }
+            .navbar-brand {
+                color: white;
+                margin: 0 auto;
+            }
+            .container-fluid {
+                display: flex;
+                justify-content: center;
+            }
+            .sidebar {
+                border: 1px solid black;
+                padding: 10px;
+                width: 20%;
+                height: 100vh;
+                overflow-y: auto;
+            }
+            .content {
+                border: 1px solid black;
+                padding: 10px;
+                width: 80%;
+            }
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 20px;
+            }
+            .user-info input {
+                margin-bottom: 10px;
+            }
+            .search-section {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .search-section input {
+                margin-right: 10px;
+            }
+            .appointments {
+                border-top: 1px solid black;
+                padding-top: 10px;
+            }
+            .appointment {
+                border-bottom: 1px solid black;
+                padding: 10px 0;
+                display: flex;
+                justify-content: space-between;
+            }
+            .appointment-info {
+                display: flex;
+                flex-direction: column;
+            }
+            .appointment-actions button {
+                margin-left: 5px;
+            }
+            .btn-active {
+                background-color: #00ff00; /* Example highlight color */
+                color: white;
+            }
+        </style>
+    </head>
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin Page</a>
+        <a href="/logout"  class="btn btn-dark text-white mx-5">Logout</a>
+    </div>
+</nav>
+<div class="d-flex">
+    <div class="sidebar">
+        <div class="search-section">
+            <form action="/admin/search" method="post" class="d-flex" role="search">
+                <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="user-list">
+            <a href="/admin" class="btn btn-warning w-100">All Patients</a>
+            <a href="/admin/addPage" class="btn btn-primary w-100">Add Patient</a>
+            <div class="list-group">
+                <a th:each="patient : ${patients}"
+                   th:href="|/admin/patientId/${patient.id}|"
+                   class="list-group-item list-group-item-action"
+                   th:classappend="${activePatientId == patient.id} ? 'btn-active' : ''"
+                   th:text="${patient.getUser().getFirstName()} + ' ' + ${patient.getUser().getLastName()}"></a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <h1 th:if="${currentPatient != null}" th:text="${currentPatient.getUser().getFirstName()} + ' ' + ${currentPatient.getUser().getLastName()}"></h1>
+        <h1 th:if="${currentPatient == null}">No Patient Selected</h1>
+        <form action="/admin/subscribe" method="post">
+            <input name="patientId" type="hidden" th:value="${currentPatient != null ? currentPatient.id : ''}">
+
+            <label>
+                <input name="admissionTime" class="btn btn-secondary" type="datetime-local">
+            </label>
+            <label>
+                <select name="doctorId" class="form-control">
+                    <option value="" disabled selected>Select a doctor</option>
+                    <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.getUser().getFirstName()}"></option>
+                </select>
+            </label>
+            <label>
+                <input type="text" name="description" class="form-control" id="commentInput" rows="3" placeholder="Write a description...">
+            </label>
+            <button class="btn btn-primary">Subscribe</button>
+        </form>
+        <div class="appointments">
+            <div class="appointment">
+                <div class="appointment-info">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Arrived at</th>
+                                <th>Admission time</th>
+                                <th>Doctor</th>
+                                <th>Speciality</th>
+                                <th>Admission status</th>
+                                <th>Total sum</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="admission : ${admissions}">
+                            <td th:text="${admission.getArrivedAt()}"></td>
+                            <td th:text="${admission.getAdmissionTime()}"></td>
+                            <td th:text="${admission.getDoctor().user.getFirstName()}"></td>
+                            <td th:text="${admission.getDoctor().speciality.getName()}"></td>
+                            <td>
+                                <a th:if="${admission.getStatus().toString() == 'REGISTERED'}"
+                                   th:href="|/admin/changeStatus/${admission.getId()}|"
+                                   class="btn btn-success">Enter</a>
+                                <h5 th:if="${admission.getStatus().toString() == 'WAITING'}"
+                                    th:text="'on time'"
+                                    th:classappend="${T(java.time.LocalDateTime).now().isBefore(admission.getAdmissionTime()) ? 'text-success' : 'text-danger'}"></h5>
+                            </td>
+                            <td th:text="500000"></td>
+                            <td class="d-flex mx-2">
+                                <a class="btn btn-info text-white">info</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

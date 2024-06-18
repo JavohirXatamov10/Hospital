@@ -1,0 +1,80 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Patient</title>-->
+<!--    <link rel="stylesheet" href="/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<table class="table table-striped">-->
+<!--    <thead>-->
+<!--    <tr>-->
+
+<!--        <th>Admission id</th>-->
+<!--        <th>Arrived at</th>-->
+<!--        <th>Admission time</th>-->
+<!--        <th>Doctor</th>-->
+<!--        <th>Speciality</th>-->
+<!--        <th>Total sum</th>-->
+<!--        <th>Function</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        <tr th:each="admission:${admissions}">-->
+
+<!--            <td th:text="${admission.getId()}"></td>-->
+<!--            <td th:text="${admission.getArrivedAt()}"></td>-->
+<!--            <td th:text="${admission.getAdmissionTime()}"></td>-->
+<!--            <td th:text="${admission.doctor.getUser().firstName}"></td>-->
+<!--            <td th:text="${admission.doctor.getSpeciality().getName()}"></td>-->
+<!--            <td>-->
+<!--                <a href="#" class="btn btn-info">Enter</a>-->
+<!--                <a class="btn btn-info"  th:href="${'/patient/getInfo/'+admission.getPatient().getId()+','+(admission.getDoctor().getId()) +','+(admission.getId())}">Info</a>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Admission id</th>
+            <th>Arrived at</th>
+            <th>Admission time</th>
+            <th>Doctor</th>
+            <th>Speciality</th>
+            <th>Function</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="admission : ${admissions}">
+            <td th:text="${admission.id}"></td>
+            <td th:text="${admission.arrivedAt}"></td>
+            <td th:text="${admission.admissionTime}"></td>
+            <td th:text="${admission.doctor.user.firstName}"></td>
+            <td th:text="${admission.doctor.speciality.name}"></td>
+            <td>
+                <a href="#" class="btn btn-info">Enter</a>
+                <a th:if="${admission.status == T(org.example.hospital_imtihon.entity.enums.Status).COMPLETED}"
+                   th:href="@{'/patient/getInfo/' + admission.patient.id + '/' + admission.doctor.id + '/' + admission.id}"
+                   class="btn btn-info">Info</a>
+                <a th:if="${admission.status != T(org.example.hospital_imtihon.entity.enums.Status).COMPLETED}"
+                   href="#" class="btn btn-info disabled">Info</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
+

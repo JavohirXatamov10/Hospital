@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Edit Patient</h2>
+                </div>
+                <div class="card-body">
+                    <form th:action="|/super_admin/editPatient/${editedPatient.getId()}|" method="post">
+                        <div class="form-group">
+                            <input  th:value="${editedPatient.getUser().getFirstName()}" type="text" class="form-control" name="firstName" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <input th:value="${editedPatient.getUser().getLastName()}" type="text" class="form-control"  name="lastName" placeholder="Last Name">
+                        </div>
+                        <div class="form-group">
+                            <input th:value="${editedPatient.getUser().getPhone()}" type="tel" class="form-control" id="phone" name="phone" placeholder="Phone">
+                        </div>
+                        <a   href="super_admin/patient" class="btn btn-primary ">Back</a>
+                        <button type="submit" class="btn btn-primary ">Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

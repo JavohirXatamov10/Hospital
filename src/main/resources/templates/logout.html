@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .card {
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #dc3545;
+            color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            text-align: center;
+        }
+        .btn-danger {
+            width: 100px;
+        }
+        .btn-secondary {
+            width: 100px;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        Confirm Logout
+    </div>
+    <div class="card-body">
+        <p class="card-text">Are you sure you want to log out?</p>
+        <div class="btn-group">
+            <a class="btn btn-secondary">Back</a>
+            <form action="/logout" method="post">
+                <button class="btn btn-danger">Yes</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

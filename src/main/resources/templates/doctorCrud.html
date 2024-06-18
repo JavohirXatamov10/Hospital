@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor crud</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+    <div class="col-3 border-right p-2">
+        <ul class="list-group">
+            <a href="/super_admin/speciality" class="list-group-item">Speciality</a>
+            <a href="/super_admin/doctor" class="list-group-item bg-success text-dark">Doctors</a>
+            <a href="/super_admin/patient" class="list-group-item">Patient</a>
+        </ul>
+    </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="col-4 offset-8 p-2 d-flex">
+                <a href="/super_admin/sendAddDoctorPage" class="btn btn-dark">Add Doctor</a>
+                <a href="/admin" class="btn btn-dark mx-2">Admin section</a>
+                <a href="/logout" class="btn btn-dark mx-2">Logout</a>
+            </div>
+        </div>
+        <div class="p-4">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Phone number</th>
+                    <th>Speciality</th>
+                    <th>Room</th>
+                    <th>Function</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="doctor:${doctors}">
+                        <td th:text="${doctor.getId()}"></td>
+                        <td th:text="${doctor.getUser().getFirstName()}"></td>
+                        <td th:text="${doctor.getUser().getLastName()}"></td>
+                        <td th:text="${doctor.getUser().getPhone()}"></td>
+                        <td th:text="${doctor.speciality.getName()}"></td>
+                        <td th:text="${doctor.getRoomNumber().getName()}"></td>
+                        <td>
+                            <a th:href="|/super_admin/editDoctorPage/${doctor.getId()}|" class="btn btn-info">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speciality crud</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+    <div class="col-3 border-right p-2">
+        <ul class="list-group">
+            <a href="/super_admin/speciality" class="list-group-item bg-success text-dark">Speciality</a>
+            <a href="/super_admin/doctor" class="list-group-item">Doctors</a>
+            <a href="/super_admin/patient" class="list-group-item">Patient</a>
+        </ul>
+    </div>
+    <div class="col-9">
+        <div class="row">
+            <div class="col-4 offset-8 p-2 d-flex">
+                <a href="/super_admin/sendToSpecialityPage" class="btn btn-dark">Add speciality</a>
+                <a href="/admin" class="btn btn-dark mx-2">Admin section</a>
+                <a href="/logout" class="btn btn-dark mx-2">Logout</a>
+
+            </div>
+        </div>
+        <div class="p-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="speciality:${specialities}">
+                        <td th:text="${speciality.getId()}"></td>
+                        <td th:text="${speciality.getName()}"></td>
+                        <td>
+                            <a th:href="|/super_admin/editPage/${speciality.getId()}|" class="btn btn-info">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
