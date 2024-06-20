@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
@@ -33,6 +34,7 @@ public class PatientController {
     public String sentToDoctorPage(Model model, @AuthenticationPrincipal User user){
         Patient patient =patientService.findByUser(user);
         List<Admission> allByPatientAdmission = admissionService.findAllByPatient(patient);
+        allByPatientAdmission.sort(Comparator.comparing(Admission::getId).reversed());
         model.addAttribute("admissions", allByPatientAdmission);
         return "patient";
     }

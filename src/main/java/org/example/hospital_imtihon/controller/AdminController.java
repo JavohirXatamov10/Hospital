@@ -3,6 +3,7 @@ package org.example.hospital_imtihon.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.hospital_imtihon.entity.*;
 import org.example.hospital_imtihon.entity.enums.Status;
+import org.example.hospital_imtihon.repo.ProcedureRepository;
 import org.example.hospital_imtihon.service.AdministratorService;
 import org.example.hospital_imtihon.service.AdmissionService;
 import org.example.hospital_imtihon.service.DoctorService;
@@ -24,6 +25,7 @@ public class AdminController {
     private final DoctorService doctorService;
     private final AdmissionService admissionService;
     private final PatientService patientService;
+    private final ProcedureRepository procedureRepository;
     @GetMapping
     public String sentToDoctorPage(Model model){
         List<Patient> patientList = patientService.findAll();
@@ -86,4 +88,18 @@ public class AdminController {
         admissionService.save(admission);
         return "redirect:/admin/patientId/" + admission.getPatient().getId();
     }
+
+    @GetMapping("getInfo/{results}")
+    public String sentToInfoPage(@PathVariable String [] results, Model model){
+        int patientId = Integer.parseInt(results[0]);
+        int doctorId=Integer.parseInt(results[1]);
+        int admissionId=Integer.parseInt(results[2]);
+        List<Procedure> procedures=procedureRepository.findByPatientId(patientId,doctorId,admissionId);
+        double totalSum = procedures.stream().mapToDouble(Procedure::getPrice).sum();
+        model.addAttribute("totalSum",totalSum);
+        model.addAttribute("procedures",procedures);
+        return "getInfoAdmin";
+    }
+
+
 }

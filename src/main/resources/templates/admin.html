@@ -99,6 +99,9 @@
             </div>
         </div>
     </div>
+
+
+
     <div class="content">
         <h1 th:if="${currentPatient != null}" th:text="${currentPatient.getUser().getFirstName()} + ' ' + ${currentPatient.getUser().getLastName()}"></h1>
         <h1 th:if="${currentPatient == null}">No Patient Selected</h1>
@@ -130,7 +133,7 @@
                                 <th>Doctor</th>
                                 <th>Speciality</th>
                                 <th>Admission status</th>
-                                <th>Total sum</th>
+<!--                                <th>Total sum</th>-->
                                 <th>Function</th>
                             </tr>
                         </thead>
@@ -144,13 +147,19 @@
                                 <a th:if="${admission.getStatus().toString() == 'REGISTERED'}"
                                    th:href="|/admin/changeStatus/${admission.getId()}|"
                                    class="btn btn-success">Enter</a>
-                                <h5 th:if="${admission.getStatus().toString() == 'WAITING'}"
+                                <h5 th:if="${admission.getStatus().toString() == 'WAITING' || admission.getStatus().toString() == 'COMPLETED'}"
                                     th:text="'on time'"
                                     th:classappend="${T(java.time.LocalDateTime).now().isBefore(admission.getAdmissionTime()) ? 'text-success' : 'text-danger'}"></h5>
                             </td>
-                            <td th:text="500000"></td>
+<!--                            <td th:text="500000"></td>-->
                             <td class="d-flex mx-2">
-                                <a class="btn btn-info text-white">info</a>
+                                <a th:if="${admission.status == T(org.example.hospital_imtihon.entity.enums.Status).COMPLETED}"
+                                   th:href="@{'/admin/getInfo/' + ${admission.patient.id} + ',' + ${admission.doctor.id} + ',' + ${admission.id}}"
+                                   class="btn btn-info">Info</a>
+                                <a th:if="${admission.status != T(org.example.hospital_imtihon.entity.enums.Status).COMPLETED}"
+                                   href="#" class="btn btn-info disabled" aria-disabled="true">Info</a>
+
+
                             </td>
                         </tr>
                         </tbody>

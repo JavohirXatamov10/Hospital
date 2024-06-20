@@ -75,7 +75,7 @@
 <body>
 <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
     <div class="container-fluid">
-        <h3 class="navbar-brand text-white text-center" href="#" th:text="${'Welcome '+ doctor.getFirstName()}"></h3>
+        <h3 class="navbar-brand text-white text-center" href="#" th:text="${'Welcome ' + doctor.getUser().firstName}"></h3>
         <a href="/logout" class="btn btn-dark text-white mx-5">Logout</a>
     </div>
 </nav>
@@ -87,28 +87,31 @@
                 <a th:each="admission : ${admissions}"
                    th:href="|/doctor/patient/${admission.getPatient().getId()}|"
                    class="list-group-item list-group-item-action"
-                   th:classappend="${activePatientId == admission.getPatient().id} ? 'btn-active' : ''"
+                   th:classappend="${activePatientId == admission.getPatient().getId()} ? 'btn-active' : ''"
                    th:text="${admission.getPatient().getUser().getFirstName()} + ' ' + ${admission.getPatient().getUser().getLastName()}"></a>
             </div>
         </div>
     </div>
-    <div class="content">
-        <h3 th:text="${currentPatient != null && currentPatient.getUser() != null ? currentPatient.getUser().getFirstName() + ' ' + currentPatient.getUser().getLastName() : ''}"></h3>
-        <h1 th:if="${currentPatient == null}">No Patient Selected</h1>
-        <form th:if="${currentPatient != null && currentPatient.getUser() != null}" th:action="|/doctor/addProcedure/${currentPatient.getId()}|" method="post">
-            <div class="d-flex">
-                <label>
-                    <input name="title" type="text" placeholder="Title" required>
-                </label>
-                <label>
-                    <input name="description" type="text" placeholder="Description" required>
-                </label>
-                <label>
-                    <input name="price" type="number" placeholder="Price">
-                </label>
-                <button class="btn btn-dark text-white text-center">Add</button>
-            </div>
-        </form>
+
+
+
+        <div class="content">
+            <h3 th:text="${currentPatient != null && currentPatient.getUser() != null ? currentPatient.getUser().getFirstName() + ' ' + currentPatient.getUser().getLastName() : ''}"></h3>
+            <h1 th:if="${currentPatient == null}">No Patient Selected</h1>
+            <form th:if="${currentPatient != null && currentPatient.getUser() != null}" th:action="|/doctor/addProcedure/${currentPatient.getId()}|" method="post">
+                <div class="d-flex">
+                    <label>
+                        <input name="title" type="text" placeholder="Title" required>
+                    </label>
+                    <label>
+                        <input name="description" type="text" placeholder="Description" required>
+                    </label>
+                    <label>
+                        <input name="price" type="number" placeholder="Price">
+                    </label>
+                    <button class="btn btn-dark text-white text-center">Add</button>
+                </div>
+            </form>
 
         <div class="appointments">
             <div class="appointment">
@@ -122,7 +125,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="procedure:${procedures}">
+                        <tr th:each="procedure : ${procedures}">
                             <td th:text="${procedure.title}"></td>
                             <td th:text="${procedure.description}"></td>
                             <td th:text="${procedure.price}"></td>
@@ -130,12 +133,175 @@
                         </tbody>
                     </table>
                     <h3 th:text="${totalSum}"></h3>
-
+                    <a th:if="${currentPatient != null}" th:href="|/doctor/finishProcedure/${currentPatient.getId()}|" class="btn btn-dark text-white">Finish</a>
                 </div>
             </div>
         </div>
 
-        <a class="btn btn-dark text-white">Finish</a></div>
+    </div>
+
 </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Hospital Reception Admin Page</title>-->
+<!--    <link rel="stylesheet" href="/css/bootstrap.min.css">-->
+<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--        }-->
+<!--        .navbar {-->
+<!--            background-color: black;-->
+<!--        }-->
+<!--        .navbar-brand {-->
+<!--            color: white;-->
+<!--            margin: 0 auto;-->
+<!--        }-->
+<!--        .container-fluid {-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--        }-->
+<!--        .sidebar {-->
+<!--            border: 1px solid black;-->
+<!--            padding: 10px;-->
+<!--            width: 20%;-->
+<!--            height: 100vh;-->
+<!--            overflow-y: auto;-->
+<!--        }-->
+<!--        .content {-->
+<!--            border: 1px solid black;-->
+<!--            padding: 10px;-->
+<!--            width: 80%;-->
+<!--        }-->
+<!--        .user-info {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .user-info input {-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .search-section {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+<!--        .search-section input {-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+<!--        .appointments {-->
+<!--            border-top: 1px solid black;-->
+<!--            padding-top: 10px;-->
+<!--        }-->
+<!--        .appointment {-->
+<!--            border-bottom: 1px solid black;-->
+<!--            padding: 10px 0;-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--        }-->
+<!--        .appointment-info {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--        }-->
+<!--        .appointment-actions button {-->
+<!--            margin-left: 5px;-->
+<!--        }-->
+<!--        .btn-active {-->
+<!--            background-color: #00ff00; /* Example highlight color */-->
+<!--            color: white;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">-->
+<!--    <div class="container-fluid">-->
+<!--        <h3 class="navbar-brand text-white text-center" href="#" th:text="${'Welcome '+ doctor.getFirstName()}"></h3>-->
+<!--        <a href="/logout" class="btn btn-dark text-white mx-5">Logout</a>-->
+<!--    </div>-->
+<!--</nav>-->
+<!--<div class="d-flex">-->
+<!--    <div class="sidebar">-->
+<!--        <div class="user-list">-->
+<!--            <a href="/doctor" class="btn btn-warning w-100">All Patients</a>-->
+<!--            <div class="list-group">-->
+<!--                <a th:each="admission : ${admissions}"-->
+<!--                   th:href="|/doctor/patient/${admission.getPatient().getId()}|"-->
+<!--                   tepada admission.getId bo`lishi kerek-->
+
+<!--                   class="list-group-item list-group-item-action"-->
+<!--                   th:classappend="${activePatientId == admission.getPatient().id} ? 'btn-active' : ''"-->
+<!--                   th:text="${admission.getPatient().getUser().getFirstName()} + ' ' + ${admission.getPatient().getUser().getLastName()}"></a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="content">-->
+<!--        <h3 th:text="${currentPatient != null && currentPatient.getUser() != null ? currentPatient.getUser().getFirstName() + ' ' + currentPatient.getUser().getLastName() : ''}"></h3>-->
+<!--        <h1 th:if="${currentPatient == null}">No Patient Selected</h1>-->
+<!--        <form th:if="${currentPatient != null && currentPatient.getUser() != null}" th:action="|/doctor/addProcedure/${currentPatient.getId()}|" method="post">-->
+<!--            <div class="d-flex">-->
+<!--                <label>-->
+<!--                    <input name="title" type="text" placeholder="Title" required>-->
+<!--                </label>-->
+<!--                <label>-->
+<!--                    <input name="description" type="text" placeholder="Description" required>-->
+<!--                </label>-->
+<!--                <label>-->
+<!--                    <input name="price" type="number" placeholder="Price">-->
+<!--                </label>-->
+<!--                <button class="btn btn-dark text-white text-center">Add</button>-->
+<!--            </div>-->
+<!--        </form>-->
+
+<!--        <div class="appointments">-->
+<!--            <div class="appointment">-->
+<!--                <div class="appointment-info">-->
+<!--                    <table class="table table-striped">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>Title</th>-->
+<!--                            <th>Description</th>-->
+<!--                            <th>Price</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="procedure:${procedures}">-->
+<!--                            <td th:text="${procedure.title}"></td>-->
+<!--                            <td th:text="${procedure.description}"></td>-->
+<!--                            <td th:text="${procedure.price}"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    <h3 th:text="${totalSum}"></h3>-->
+<!--                    </table>-->
+<!--                    <a th:action="|/doctor/finishProcedure/${currentPatient.getId()}|" class="btn btn-dark text-white">Finish</a></div>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
